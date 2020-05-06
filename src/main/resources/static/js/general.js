@@ -1,3 +1,5 @@
+var imgUrl = '';
+var changeTrack = 1;
 window.onload = function () {
     refresh_content();
     GetWeather();
@@ -10,6 +12,43 @@ window.onload = function () {
 };
 
 document.onkeydown = checkKey;
+
+let touchstartX = 0;
+let touchstartY = 0;
+let touchendX = 0;
+let touchendY = 0;
+var isPaused = true;
+
+const gestureZone = document;
+
+gestureZone.addEventListener('touchstart', function(event) {
+    touchstartX = event.changedTouches[0].screenX;
+    touchstartY = event.changedTouches[0].screenY;
+}, false);
+
+gestureZone.addEventListener('touchend', function(event) {
+    touchendX = event.changedTouches[0].screenX;
+    touchendY = event.changedTouches[0].screenY;
+    handleGesture();
+}, false); 
+
+function handleGesture() {
+    if (touchendX < touchstartX) {
+        song_forward();
+    }
+    
+    if (touchendX > touchstartX) {
+        song_backward();
+    }
+    if (touchendY === touchstartY) {
+        if (isPaused)
+        {
+            song_play();
+        } else {
+            song_pause();
+        }        
+    }
+}
 
 function checkKey(e) {
 
@@ -53,6 +92,10 @@ async function postData(url = '', data = {}) {
 }
 
 async function getData(url = '', data = {}) {
+    if (url.startsWith('http') == false) 
+    {
+	url = 'http://localhost:8080/' + url;
+    }
     // Default options are marked with *
     const response = await fetch( url, {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
@@ -76,7 +119,6 @@ async function getData(url = '', data = {}) {
 
 function refresh_content() {
     getData("player/current", "").then(result => {
-        console.log("TEST"+result);
         if (result === undefined) {
             document.getElementById("spotify-image").src = "images/placeholder_1.png";
             document.getElementById("spotify-artist").innerText = "Not Connected";
@@ -87,7 +129,6 @@ function refresh_content() {
             document.getElementById("time").innerText = moment().format('HH:mm');
             document.getElementById("date").innerHTML = moment().format('dddd<br /> Do MMMM');
         } else {
-            document.getElementById("spotify-image").src = "https://i.scdn.co/image/" + result.image.key;
             document.getElementById("spotify-artist").innerText = result.track.artist[0].name;
             document.getElementById("spotify-title").innerText = result.track.name;
             document.getElementById("spotify-album").innerText = result.track.album.name;
@@ -96,7 +137,23 @@ function refresh_content() {
             var percent = (result.trackTime / result.track.duration) * 100;
             document.getElementById("percent").style.width = percent + "%";
             document.getElementById("smalltime").innerText = moment().format('HH:mm');
-            document.getElementById("smalldate").innerHTML = moment().format('DD/MM/YYYY');
+            document.getElementById("smalldate").innerHTML = moment().format('ddd DD/MM/YYYY');
+            var newImgUrl = "https://i.scdn.co/image/" + result.image.key;
+            if (imgUrl != newImgUrl || changeTrack != 0)
+            {
+                console.log(changeTrack);
+                var tempChangeTrack = changeTrack;
+                $('#spotify-image').animate({'background-position-x': tempChangeTrack != -1 ? '-300px' : '300px'}, function() {
+                    imgUrl = newImgUrl;
+                    $('<img/>').attr('src', imgUrl).on('load', function() {
+                       $(this).remove(); // prevent memory leaks as @benweet suggested
+                       $('#spotify-image').css('background-image', `url(${imgUrl})`);
+                       $('#spotify-image').css('background-position-x', tempChangeTrack != -1 ? '300px' : '-300px');
+                       $('#spotify-image').animate({'background-position-x': '0'});
+                    });
+                });
+                this.changeTrack = 0;
+            }
         }
     }).catch(error => {
         console.error(error)
@@ -104,23 +161,25 @@ function refresh_content() {
 }
 
 function song_play() {
-    $("#play_pause_button").attr('onclick', 'song_pause()');
     $("#play_pause_image").removeClass("fa-play").addClass("fa-pause");
     getData("player/resume", "");
+    isPaused = false;
 }
 
 function song_pause() {
-    $("#play_pause_button").attr('onclick', 'song_play()');
     $("#play_pause_image").removeClass("fa-pause").addClass("fa-play");
     getData("player/pause", "");
+    isPaused = true;
 }
 
 function song_forward() {
     getData("player/next", "");
+    changeTrack = 1;
 }
 
 function song_backward() {
     getData("player/previous", "");
+    changeTrack = -1;
 }
 
 function song_volumeup() {

@@ -5,12 +5,15 @@
     <title>Spotify Client</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="3rd-party/bootstrap/4.3.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/general.css">
+    <link rel="stylesheet" href="css/general.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="3rd-party/bootstrap/4.3.1/js/bootstrap.bundle.js"></script>
     <script src="3rd-party/jquery/jquery-3.4.1.min.js"></script>
     <script src="3rd-party/moment.js"></script>
     <script src="js/general.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
 </head>
 
 <body>
@@ -30,24 +33,24 @@
         <div class="smalltime" id="smalltime"></div>
         <div class="smallweather" id="smallweather">Loading..</div>
     </div>
-    <div class="row justify-content-center content">
-        <div class="col-6 left">
-                <div class="h3" id="spotify-title"></div>
-                <div class="h3" id="spotify-artist"></div>
-                <div class="h3" id="spotify-album"></div>
-                <div class="h3" id="spotify-time"></div>
+    <div class="content">
+        <div>
+            <div class="h3" id="spotify-title"></div>
+            <div class="h3" id="spotify-artist"></div>
+            <div class="h3" id="spotify-album"></div>
+            <div class="h3" id="spotify-time"></div>
         </div>
-        <div class="col-6 right">
-            <div class="row">
-                <img alt="spotify-image" src="" id="spotify-image"/>
-            </div>
-            <div class="row controls">
+        <div>
+            <div class="spotify-image-placeholder">
+                <div id="spotify-image"></div>
+                <div class="controls">
                     <a onclick="song_backward()"><i id="" class="fa fa-fast-backward fa-2x"></i>
                     </a>
-                    <a id="play_pause_button" onclick="song_pause()"><i id="play_pause_image" class="fa fa-pause fa-2x"></i>
+                    <a id="play_pause_button"><i id="play_pause_image" class="fa fa-pause fa-2x"></i>
                     </a>
                     <a onclick="song_forward()"><i id="" class="fa fa-fast-forward fa-2x"></i>
                     </a>
+                </div>
             </div>
         </div>
     </div>

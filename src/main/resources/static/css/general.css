@@ -18,7 +18,13 @@ body
 	cursor: none
 }
 .content {
-	padding: 3rem;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	height: 100%;
+}
+.content > div {
+	width: 40%;
 }
 .h3 {
     text-overflow: ellipsis;
@@ -26,7 +32,7 @@ body
     overflow: hidden;
 }
 .topbar {
-	position: absolute;
+	position: fixed;
 	top:0;
 	width: 100%;
 	height: 30px;
@@ -45,8 +51,8 @@ body
 	color: white;
 }
 .percentBar {
-	position: absolute;
-	height:1rem;
+	position: fixed;
+	height:.1rem;
 	bottom: 0;
 	width: 100%;
 	z-index: 1000;
@@ -76,27 +82,25 @@ body
     content: '\f02b';
     margin:0 6px 0 0px;
 }
-.right {
-	text-align: center;
-}
-.left {
-	padding-left: 6rem;
-	padding-top: 6rem;
-}
 #spotify-image {
-	width: 100%;
-	margin: auto;
+	width: 300px;
+	height: 300px;
+    	background-repeat: no-repeat;
 }
 .controls {
-	width:50%;
-	margin: 1rem auto;
+	margin-top: 1rem;
 	display: flex;
 	flex-wrap: nowrap;
-	justify-content: center;
+	justify-content: space-around;
 }
-.controls a {
-	width: auto;
+.spotify-image-placeholder {
 	margin: auto;
+	background-image: urL('../images/vinyl.png');
+	background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+	width: 300px;
+	height: 300px;
 }
 #spotify-not-connected {
 	background-color: #000;
